@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum UserRole {
+  donor
+  hospital
+  blood_center
+}
+
+enum RhFactor {
+  plus
+  minus
+}
+
+enum BloodGroup {
+  A
+  B
+  AB
+  O
+}
+
+enum BloodComponent {
+  whole_blood
+  red_cells
+  platelets
+  plasma
+}
+
+enum SlotStatus {
+  booked
+  confirmed
+  arrived
+  collected
+  completed
+  cancelled
+}
+
+enum DeliveryStatus {
+  pending
+  en_route
+  delivered
+  failed
+}
+
+model User {
+  id        String   @id @default(cuid())
+  role      UserRole
+
+  email     String   @unique
+  phone     String?
+  passwordHash String
+
+  // Donor fields
+  firstName String?
+  lastName  String?
+  bloodGroup BloodGroup?
+  rh         RhFactor?
+  weightKg   Float?
+  heightCm   Float?
+  dob         DateTime?
+  healthHistory Json?
+  healthMetrics Json?
+  totalDonatedLiters Float @default(0)
+  badges     Json?
+  points     Int @default(0)
+  lastDonationDate DateTime?
+
+  // Hospital / Center fields
+  name    String?
+  region  String?
+  address String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  donorHealthEvents DonorHealthEvent[]
+  donorDonations DonorDonation[]
+  donorSlotsAsDonor DonorSlot[] @relation("DonorSlotDonor")
+  donorSlotsAsCenter DonorSlot[] @relation("DonorSlotCenter")
+
+  inventoryAsCenter BloodInventory[] @relation("InventoryAsCenter")
+  inventoryAsHospital BloodInventory[] @relation("InventoryAsHospital")
+
+  emergencyAsHospital EmergencyRequest[] @relation("EmergencyAsHospital")
+  emergencyAsCenter EmergencyRequest[] @relation("EmergencyAsCenter")
+  emergencyAsDonor EmergencyRequest[] @relation("EmergencyAsDonor")
+
+  notifications Notification[]
+}
+
+model DonorHealthEvent {
+  id        String   @id @default(cuid())
+  donorId   String
+  donor     User     @relation(fields: [donorId], references: [id])
+
+  hemoglobin Float?
+  infectionTests Json?
+  measuredAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([donorId, measuredAt])
+}
+
+model DonorDonation {
+  id        String   @id @default(cuid())
+  donorId   String
+  centerId  String?
+  hospitalId String?
+
+  donor     User     @relation(fields: [donorId], references: [id])
+
+  bloodGroup  BloodGroup?
+  rh          RhFactor?
+  component   BloodComponent?
+
+  liters Float
+  donationStatus String @default("completed")
+  donatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([donorId, donatedAt])
+}
+
+model BloodInventory {
+  id        String   @id @default(cuid())
+
+  centerId  String?
+  hospitalId String?
+
+  center   User? @relation("InventoryAsCenter", fields: [centerId], references: [id])
+  hospital User? @relation("InventoryAsHospital", fields: [hospitalId], references: [id])
+
+  component   BloodComponent
+  bloodGroup  BloodGroup
+  rh          RhFactor
+  quantity    Float
+  expiryDate  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([centerId])
+  @@index([hospitalId])
+}
+
+model EmergencyRequest {
+  id        String   @id @default(cuid())
+
+  hospitalId String?
+  centerId   String?
+
+  hospital User? @relation("EmergencyAsHospital", fields: [hospitalId], references: [id])
+  center   User? @relation("EmergencyAsCenter", fields: [centerId], references: [id])
+
+  bloodGroup  BloodGroup
+  rh          RhFactor?
+  component   BloodComponent
+  quantity    Float
+
+  status            String  @default("pending")
+  donorId           String?
+  donor             User?   @relation("EmergencyAsDonor", fields: [donorId], references: [id])
+  donorApproved    Boolean @default(false)
+
+  deliveryStatus DeliveryStatus @default(pending)
+  deliveryEtaDemoMinutes Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([hospitalId, createdAt])
+  @@index([centerId, createdAt])
+}
+
+model DonorSlot {
+  id        String   @id @default(cuid())
+  donorId   String
+  centerId  String
+
+  donor     User @relation("DonorSlotDonor", fields: [donorId], references: [id])
+  center    User @relation("DonorSlotCenter", fields: [centerId], references: [id])
+
+  slotTime   DateTime
+  status     SlotStatus @default(booked)
+  etaDemoMinutes Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([donorId, slotTime])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  type    String
+  message String
+  read    Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+

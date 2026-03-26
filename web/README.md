@@ -51,3 +51,30 @@ npm run build
 npm run prisma:generate
 npm run prisma:migrate
 ```
+
+---
+
+## Loyiha haqida qisqacha (O'zbekcha)
+
+Blood Chain — bu zamonaviy qon donatsiyasi va donorlarni boshqarish uchun yaratilgan veb-ilova. Platforma orqali donorlar, qon markazlari va shifoxonalar o‘zaro tezkor va samarali hamkorlik qilishi mumkin.
+
+### Asosiy imkoniyatlar
+- Donorlar uchun shaxsiy kabinet: donorlik tarixi, sog‘liq holati, bonuslar va gamifikatsiya.
+- Qon markazlari boshqaruvi: inventar, so‘rovlar, statistikalar va tahlillar.
+- Shifoxonalar uchun buyurtmalar: qon komponentlariga buyurtma berish va yetkazib berishni kuzatish.
+- Avtorizatsiya va xavfsizlik: foydalanuvchilar uchun xavfsiz kirish va chiqish.
+- Qon donatsiyasi haqida ma’lumotlar: donorlik foydalari, qon birliklari va statistikalar.
+
+### Texnologiyalar
+- Next.js (React)
+- TypeScript
+- Tailwind CSS
+- Prisma ORM
+- Supabase (backend va autentifikatsiya)
+
+### Hissa qo‘shish
+Taklif va xatoliklar uchun Issues bo‘limiga yozing yoki pull request yuboring.
+
+---
+
+Hayotingizni saqlab qoling va boshqalarga yordam bering — donor bo‘ling!

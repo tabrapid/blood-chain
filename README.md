@@ -22,7 +22,10 @@ Blood Chain — bu donorlar, qon markazlari va shifoxonalar o‘rtasida qon dona
 2. Supabase yoki SQLite konfiguratsiyasini sozlang
 
 ## Mualliflar
-Blood Chain jamoasi
+Jaloliddin Abdug'aniyev https://t.me/tabrapid
+To'rabek Yo'ldoshev https://t.me/Torabek_10
+Adham Soatov https://t.me/Adhambek01
+
 
 ---
 

@@ -29,10 +29,12 @@ export default async function HospitalLayout({
           <div className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Hospital Menyu</div>
           <SidebarNav
             items={[
-              { href: "/hospital", label: "Dashboard" },
-              { href: "/hospital/orders", label: "Digital Order" },
-              { href: "/hospital/tracking", label: "Logistika Tracking" },
-              { href: "/hospital/history", label: "Order History" },
+              { href: "/hospital", label: "Dashboard", icon: "home" },
+              { href: "/hospital/orders", label: "Buyurtmalar", icon: "award" },
+              { href: "/hospital/tracking", label: "Tracking", icon: "map" },
+              { href: "/hospital/history", label: "Tarix", icon: "profile" },
+              { href: "/hospital/settings", label: "Sozlamalar", icon: "settings" },
+              { href: "/login", label: "Chiqish", icon: "logout" },
             ]}
           />
         </aside>

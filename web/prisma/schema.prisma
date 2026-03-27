@@ -7,33 +7,33 @@ datasource db {
   provider = "sqlite"
 }
 
-enum UserRole {
-  donor
-  hospital
-  blood_center
+model User {
+  id                 String   @id @default(cuid())
+  role               UserRole
+  email              String   @unique
+  phone              String?
+  passwordHash       String
+  firstName          String?
+  lastName           String?
+  bloodGroup         BloodGroup?
+  rh                 RhFactor?
+  weightKg           Float?
+  heightCm           Float?
+  dob                DateTime?
+  healthHistory      Json?
+  healthMetrics      Json?
+  totalDonatedMl     Int      @default(0) // donor tomonidan topshirilgan jami qon (ml)
+  badges             Json?
+  points             Int      @default(0)
+  lastDonationDate   DateTime?
+  name               String?
+  region             String?
+  address            String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  donations          DonorDonation[]
+  healthEvents       DonorHealthEvent[]
 }
-
-enum RhFactor {
-  plus
-  minus
-}
-
-enum BloodGroup {
-  A
-  B
-  AB
-  O
-}
-
-enum BloodComponent {
-  whole_blood
-  red_cells
-  platelets
-  plasma
-}
-
-enum SlotStatus {
-  booked
   confirmed
   arrived
   collected
@@ -108,19 +108,19 @@ model DonorHealthEvent {
 }
 
 model DonorDonation {
-  id        String   @id @default(cuid())
-  donorId   String
-  centerId  String?
-  hospitalId String?
-
-  donor     User     @relation(fields: [donorId], references: [id])
-
+  id          String   @id @default(cuid())
+  donorId     String
+  donor       User     @relation(fields: [donorId], references: [id])
+  centerId    String?
+  hospitalId  String?
   bloodGroup  BloodGroup?
   rh          RhFactor?
   component   BloodComponent?
-
-  liters Float
-  donationStatus String @default("completed")
+  volumeMl    Int      // donor topshirgan qon hajmi (ml)
+  donationStatus String? @default("completed")
+  donatedAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+}
   donatedAt DateTime @default(now())
   createdAt DateTime @default(now())
 

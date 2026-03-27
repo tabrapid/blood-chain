@@ -29,11 +29,13 @@ export default async function BloodCenterLayout({
           <div className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Admin Menyu</div>
           <SidebarNav
             items={[
-              { href: "/blood-center", label: "Master Dashboard" },
-              { href: "/blood-center/inventory", label: "Inventory" },
-              { href: "/blood-center/expiry", label: "Expiry Monitoring" },
-              { href: "/blood-center/requests", label: "Hospital Requests" },
-              { href: "/blood-center/analytics", label: "Analytics & AI" },
+              { href: "/blood-center", label: "Dashboard", icon: "home" },
+              { href: "/blood-center/inventory", label: "Inventory", icon: "award" },
+              { href: "/blood-center/expiry", label: "Expiry", icon: "health" },
+              { href: "/blood-center/requests", label: "Requests", icon: "hospital" },
+              { href: "/blood-center/analytics", label: "Analytics", icon: "map" },
+              { href: "/blood-center/settings", label: "Settings", icon: "settings" },
+              { href: "/login", label: "Logout", icon: "logout" },
             ]}
           />
         </aside>

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
+import { Droplet, Clock, BarChart2, Flame, AlertTriangle, User, HeartPulse, FileText, CalendarCheck, Bell, MapPin, Map, Star, Gift, Pill, Dumbbell, Coffee, MessageCircle, Heart, Trophy, Settings, Check } from "lucide-react";
 
 type DonorMe = {
   profile: {
@@ -10,7 +11,7 @@ type DonorMe = {
     last_name: string | null;
     blood_group: string | null;
     rh: string | null;
-    total_donated_liters: number | null;
+    total_donated_ml: number | null;
     points: number | null;
     last_donation_date: string | null;
     dob?: string | null;
@@ -18,8 +19,8 @@ type DonorMe = {
   slots: Array<{ id: string; slot_time: string; status: string }>;
   notifications: Array<{ id: string; message: string }>;
   emergency_feed: Array<{ id: string; blood_group: string; component: string; quantity: number }>;
-  donations: Array<{ id: string; blood_group: string | null; rh: string | null; component: string | null; liters: number; donated_at: string }>;
-  leaderboard: Array<{ id: string; first_name: string | null; last_name: string | null; total_donated_liters: number; points: number }>;
+  donations: Array<{ id: string; blood_group: string | null; rh: string | null; component: string | null; volume_ml: number; donated_at: string }>;
+  leaderboard: Array<{ id: string; first_name: string | null; last_name: string | null; total_donated_ml: number; points: number }>;
   donation_count: number;
   donor_level: string;
 };
@@ -56,7 +57,7 @@ const translations = {
 
     // Stats labels
     totalDonations: "Jami donorlik",
-    litersDonated: "Topshirilgan litr",
+    donatedMl: "Topshirilgan ml",
     livesSaved: "Saqlangan hayotlar",
     bonusPoints: "Bonus ball",
 
@@ -148,7 +149,7 @@ const translations = {
 
     // Stats labels
     totalDonations: "Всего донаций",
-    litersDonated: "Сдано литров",
+    donatedMl: "Сдано миллилитров",
     livesSaved: "Спасенных жизней",
     bonusPoints: "Бонусные баллы",
 
@@ -240,7 +241,7 @@ const translations = {
 
     // Stats labels
     totalDonations: "Total Donations",
-    litersDonated: "Liters Donated",
+    donatedMl: "Milliliters Donated",
     livesSaved: "Lives Saved",
     bonusPoints: "Bonus Points",
 
@@ -365,8 +366,9 @@ export default function DonorMegaDashboard() {
     };
   }, [loadAll]);
 
-  const totalDonated = Number(me?.profile?.total_donated_liters ?? 0);
-  const livesSaved = Math.max(1, Math.round(totalDonated * 3));
+  const totalDonatedMl = Number(me?.profile?.total_donated_ml ?? 0);
+  const totalDonatedL = (totalDonatedMl / 1000).toFixed(2);
+  const livesSaved = Math.max(1, Math.round((totalDonatedMl / 450) * 3));
   const nextDays = daysUntilNext(me?.profile?.last_donation_date ?? null);
   const age = (() => {
     const dob = me?.profile?.dob;
@@ -473,11 +475,11 @@ export default function DonorMegaDashboard() {
       <section className="rounded-3xl border border-red-100 bg-gradient-to-r from-red-600 via-rose-500 to-red-500 p-5 text-white shadow-lg dark:border-red-900">
         <div className="text-xl font-semibold">{t.welcome}, {me.profile?.first_name ?? t.donorMenu}! {t.saveLifeMessage}</div>
         <div className="mt-3 flex flex-wrap gap-3 text-sm">
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700">🩸 {me.profile?.blood_group ?? "-"} Rh{me.profile?.rh ?? "-"}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700">⏳ {t.nextDonation}: {nextDays} {t.days}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700">📊 {totalDonated}L · {livesSaved} {t.lives}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700">🔥 {t.streak}: {streakDays} {t.days}</div>
-          {me.emergency_feed.length > 0 && <div className="rounded-xl bg-rose-900 px-3 py-2 text-white">🚨 {t.emergencyNeeded}</div>}
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700 flex items-center gap-2"><Droplet className="w-4 h-4" /> {me.profile?.blood_group ?? "-"} Rh{me.profile?.rh ?? "-"}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700 flex items-center gap-2"><Clock className="w-4 h-4" /> {t.nextDonation}: {nextDays} {t.days}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700 flex items-center gap-2"><BarChart2 className="w-4 h-4" /> {totalDonatedMl} ml ({totalDonatedL} L) · {livesSaved} {t.lives}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-red-700 flex items-center gap-2"><Flame className="w-4 h-4" /> {t.streak}: {streakDays} {t.days}</div>
+          {me.emergency_feed.length > 0 && <div className="rounded-xl bg-rose-900 px-3 py-2 text-white flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> {t.emergencyNeeded}</div>}
         </div>
       </section>
 
@@ -487,8 +489,8 @@ export default function DonorMegaDashboard() {
           <div className="mt-2 text-2xl font-bold">{me.donation_count}</div>
         </div>
         <div className="rounded-2xl border bg-white p-4 dark:bg-zinc-900">
-          <div className="text-xs text-slate-600 dark:text-slate-300">{t.litersDonated}</div>
-          <div className="mt-2 text-2xl font-bold">{totalDonated}L</div>
+          <div className="text-xs text-slate-600 dark:text-slate-300">{t.donatedMl}</div>
+          <div className="mt-2 text-2xl font-bold">{totalDonatedMl} ml</div>
         </div>
         <div className="rounded-2xl border bg-white p-4 dark:bg-zinc-900">
           <div className="text-xs text-slate-600 dark:text-slate-300">{t.livesSaved}</div>
@@ -501,22 +503,22 @@ export default function DonorMegaDashboard() {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">👤 {t.profile}</h3>
-          <div className="mt-3 text-sm space-y-1">
-            <div>{t.fullName}: {(me.profile?.first_name ?? "") + " " + (me.profile?.last_name ?? "")}</div>
-            <div>{t.age}: {age}</div>
-            <div>{t.bloodType}: {me.profile?.blood_group ?? "-"} Rh{me.profile?.rh ?? "-"}</div>
-            <div>{t.donationCount}: {me.donation_count}</div>
-            <div>{t.donorLevel}: {me.donor_level}</div>
+        <div className="rounded-2xl border-2 border-rose-200 bg-white p-5 shadow-lg dark:bg-zinc-900">
+          <h3 className="font-bold flex items-center gap-2 text-lg text-rose-700 dark:text-rose-300"><Droplet className="w-5 h-5" /> Qon analizi</h3>
+          <div className="mt-3 text-base space-y-2">
+            <div className="flex items-center gap-2"><User className="w-4 h-4 text-rose-400" /> <span className="font-medium">{t.fullName}:</span> {(me.profile?.first_name ?? "") + " " + (me.profile?.last_name ?? "")}</div>
+            <div className="flex items-center gap-2"><CalendarCheck className="w-4 h-4 text-rose-400" /> <span className="font-medium">{t.age}:</span> {age}</div>
+            <div className="flex items-center gap-2"><Droplet className="w-4 h-4 text-rose-400" /> <span className="font-medium">{t.bloodType}:</span> {me.profile?.blood_group ?? "-"} Rh{me.profile?.rh ?? "-"}</div>
+            <div className="flex items-center gap-2"><BarChart2 className="w-4 h-4 text-rose-400" /> <span className="font-medium">{t.donationCount}:</span> {me.donation_count}</div>
+            <div className="flex items-center gap-2"><Trophy className="w-4 h-4 text-rose-400" /> <span className="font-medium">{t.donorLevel}:</span> {me.donor_level}</div>
           </div>
-          <div className="mt-4">
-            <div className="text-xs text-slate-600 dark:text-slate-300">{t.donorId}</div>
+          <div className="mt-5 flex flex-col items-center">
+            <div className="text-xs text-slate-600 dark:text-slate-300 mb-1">{t.donorId}</div>
             <QRCodeSVG value={`DONOR:${me.profile?.first_name ?? "X"}:${me.profile?.blood_group ?? "-"}`} size={100} />
           </div>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">❤️ {t.healthCenter}</h3>
+          <h3 className="font-semibold flex items-center gap-2"><HeartPulse className="w-5 h-5" /> {t.healthCenter}</h3>
           <div className="mt-2 text-sm">{t.healthDescription}</div>
           <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
             <div className="rounded-lg bg-emerald-50 p-2 dark:bg-emerald-950/30">{t.hemoglobin}: <span className="font-semibold">13.8 g/dL</span></div>
@@ -527,12 +529,12 @@ export default function DonorMegaDashboard() {
             <input value={question} onChange={(e) => setQuestion(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm dark:bg-zinc-900" placeholder="Qon topshirgandan keyin nima yeyish kerak?" />
             <button onClick={askAssistant} className="rounded-lg bg-blue-600 px-3 py-2 text-sm text-white">{t.save}</button>
           </div>
-          <button className="mt-3 rounded-lg border px-3 py-2 text-sm">📄 PDF eksport (demo)</button>
+          <button className="mt-3 rounded-lg border px-3 py-2 text-sm flex items-center gap-2"><FileText className="w-4 h-4" /> PDF eksport (demo)</button>
         </div>
       </section>
 
       <section className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-        <h3 className="font-semibold">🎯 Donate Flow + 📅 Booking</h3>
+        <h3 className="font-semibold flex items-center gap-2"><CalendarCheck className="w-5 h-5" /> Donate Flow + Booking</h3>
         <div className="mt-3 grid gap-3 md:grid-cols-4">
           <select value={selectedCenter} onChange={(e) => setSelectedCenter(e.target.value)} className="rounded-lg border px-3 py-2 text-sm dark:bg-zinc-900">
             {centers.map((c) => (
@@ -545,42 +547,42 @@ export default function DonorMegaDashboard() {
         </div>
         <label className="mt-3 flex items-center gap-2 text-sm">
           <input type="checkbox" checked={reminderEnabled} onChange={(e) => setReminderEnabled(e.target.checked)} />
-          🔔 Reminder faol
+          <Bell className="w-4 h-4" /> Reminder faol
         </label>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">🗺️ Xarita (Centerlar)</h3>
+          <h3 className="font-semibold flex items-center gap-2"><Map className="w-5 h-5" /> Xarita (Centerlar)</h3>
           {selectedCenterRow ? (
-            <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm dark:border-blue-900 dark:bg-blue-950/30">
-              📍 Tanlangan markaz: <span className="font-semibold">{selectedCenterRow.name ?? "Center"}</span> · Bandlik: {selectedCenterRow.queue_load}/100
+            <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm dark:border-blue-900 dark:bg-blue-950/30 flex items-center gap-2">
+              <MapPin className="w-4 h-4" /> Tanlangan markaz: <span className="font-semibold">{selectedCenterRow.name ?? "Center"}</span> · Bandlik: {selectedCenterRow.queue_load}/100
             </div>
           ) : null}
           <div className="mt-3 space-y-2 text-sm">
             {centers.map((c) => (
               <div key={c.id} className="rounded-lg border p-3">
-                <div className="font-medium">{c.name ?? "Center"} ⭐ {c.rating.toFixed(1)}</div>
+                <div className="font-medium flex items-center gap-2">{c.name ?? "Center"} <Star className="w-4 h-4 text-yellow-400" /> {c.rating.toFixed(1)}</div>
                 <div>{c.region ?? "-"} · {c.address ?? "-"}</div>
-                <div>Queue: {c.queue_load} · Distance: {c.distance_km}km · {c.queue_load > 70 ? "🔴 Band" : "🟢 Ochiq"}</div>
+                <div>Queue: {c.queue_load} · Distance: {c.distance_km}km · {c.queue_load > 70 ? <span className="inline-flex items-center gap-1 text-red-600"><AlertTriangle className="w-3 h-3" /> Band</span> : <span className="inline-flex items-center gap-1 text-green-600"><Check className="w-3 h-3" /> Ochiq</span>}</div>
               </div>
             ))}
           </div>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">🏆 Reyting va tarix</h3>
+          <h3 className="font-semibold flex items-center gap-2"><Trophy className="w-5 h-5" /> Reyting va tarix</h3>
           <div className="mt-3 space-y-2 text-sm">
             {me.leaderboard.slice(0, 8).map((r, i) => (
               <div key={r.id} className="flex items-center justify-between rounded-lg border px-3 py-2">
                 <span>#{i + 1} {r.first_name ?? "Donor"} {r.last_name ?? ""}</span>
-                <span>{r.total_donated_liters}L · {r.points}pt</span>
+                <span>{r.total_donated_ml} ml · {(r.total_donated_ml / 1000).toFixed(2)} L · {r.points}pt</span>
               </div>
             ))}
           </div>
           <div className="mt-3 text-sm font-medium">Tarix:</div>
           <div className="mt-1 space-y-1 text-sm">
             {me.donations.slice(0, 8).map((d) => (
-              <div key={d.id}>{new Date(d.donated_at).toLocaleDateString("uz-UZ")} · {d.blood_group}{d.rh} · {d.component} · {d.liters}L</div>
+              <div key={d.id}>{new Date(d.donated_at).toLocaleDateString("uz-UZ")} · {d.blood_group}{d.rh} · {d.component} · {d.volume_ml} ml</div>
             ))}
           </div>
         </div>
@@ -588,16 +590,16 @@ export default function DonorMegaDashboard() {
 
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">🎁 Bonuslar do&apos;koni</h3>
+          <h3 className="font-semibold flex items-center gap-2"><Gift className="w-5 h-5" /> Bonuslar do&apos;koni</h3>
           <div className="mt-2 text-sm">Ball: {me.profile?.points ?? 0}</div>
           <div className="mt-3 space-y-2">
-            <button onClick={() => redeem("pharmacy_5")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white">💊 Dorixona -5%</button>
-            <button onClick={() => redeem("gym_1day")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white">🏋️ Gym 1 kun</button>
-            <button onClick={() => redeem("cafe_10")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white">☕ Kafe -10%</button>
+            <button onClick={() => redeem("pharmacy_5")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white flex items-center gap-2"><Pill className="w-4 h-4" /> Dorixona -5%</button>
+            <button onClick={() => redeem("gym_1day")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white flex items-center gap-2"><Dumbbell className="w-4 h-4" /> Gym 1 kun</button>
+            <button onClick={() => redeem("cafe_10")} className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-sm text-white flex items-center gap-2"><Coffee className="w-4 h-4" /> Kafe -10%</button>
           </div>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">💬 Hamjamiyat</h3>
+          <h3 className="font-semibold flex items-center gap-2"><MessageCircle className="w-5 h-5" /> Hamjamiyat</h3>
           <div className="mt-2 flex gap-2">
             <input value={communityText} onChange={(e) => setCommunityText(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm dark:bg-zinc-900" placeholder="Bugun qon topshirdim..." />
             <button onClick={createPost} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm text-white">Post</button>
@@ -607,13 +609,13 @@ export default function DonorMegaDashboard() {
               <div key={p.id} className="rounded-lg border p-2 text-sm">
                 <div className="font-medium">{p.author}</div>
                 <div className="max-h-28 overflow-y-auto whitespace-pre-wrap break-words text-slate-700 dark:text-slate-200">{p.content}</div>
-                <button onClick={() => likePost(p.id)} className="text-xs text-blue-600">❤️ {p.likes_count}</button>
+                <button onClick={() => likePost(p.id)} className="text-xs text-blue-600 flex items-center gap-1"><Heart className="w-3 h-3" /> {p.likes_count}</button>
               </div>
             ))}
           </div>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:bg-zinc-900">
-          <h3 className="font-semibold">🚨 SOS</h3>
+          <h3 className="font-semibold flex items-center gap-2"><AlertTriangle className="w-5 h-5 text-rose-600" /> SOS</h3>
           {me.emergency_feed.length ? (
             <div className="mt-2 space-y-2">
               {me.emergency_feed.slice(0, 5).map((e) => (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UserCog, Users, ClipboardList, AlertTriangle, Package, BarChart2, PieChart as LucidePieChart, Award, Map, Bell, CheckCircle, XCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { toast } from "sonner";
 
@@ -231,17 +232,41 @@ export default function BloodCenterDashboard() {
   return (
     <div className="space-y-5">
       <section className="rounded-3xl border border-fuchsia-100 bg-gradient-to-r from-fuchsia-700 via-purple-600 to-rose-600 p-5 text-white shadow-lg dark:border-fuchsia-900">
-        <div className="text-xl font-semibold">🧑‍💼 Qon markazi boshqaruv paneli</div>
+        <div className="flex items-center gap-2 text-xl font-semibold"><UserCog className="w-6 h-6" /> Qon markazi boshqaruv paneli</div>
         {centerInfo ? (
-          <div className="mt-1 text-sm text-white/90">
-            Siz kirgan markaz: <span className="font-semibold">{centerInfo.name ?? "Center"}</span> · <span className="font-mono">{centerInfo.id.slice(0, 8)}</span>
+          <div className="mt-1 text-sm text-white/90 flex items-center gap-2">
+            <Award className="w-4 h-4" /> Siz kirgan markaz: <span className="font-semibold">{centerInfo.name ?? "Center"}</span> · <span className="font-mono">{centerInfo.id.slice(0, 8)}</span>
           </div>
         ) : null}
         <div className="mt-3 grid gap-2 text-sm sm:grid-cols-4">
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700">Donorlar: {leaderboard.length}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700">Bugungi navbat: {donationQueue.length}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700">Zaxira birlik: {totalUnits}</div>
-          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700">SOS: {unassignedRequests.length + claimedRequests.length}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700 flex items-center gap-2"><Users className="w-4 h-4" /> Donorlar: {leaderboard.length}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700 flex items-center gap-2"><ClipboardList className="w-4 h-4" /> Bugungi navbat: {donationQueue.length}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700 flex items-center gap-2"><Package className="w-4 h-4" /> Zaxira birlik: {totalUnits}</div>
+          <div className="rounded-xl bg-white/95 px-3 py-2 text-fuchsia-700 flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> SOS: {unassignedRequests.length + claimedRequests.length}</div>
+        </div>
+
+        {/* Quick Actions / Stats */}
+        <div className="mt-6 grid gap-4 sm:grid-cols-4 text-fuchsia-700">
+          <div className="flex flex-col items-center rounded-xl bg-white/90 p-4 shadow border border-fuchsia-100">
+            <BarChart2 className="w-7 h-7 mb-1" />
+            <span className="font-semibold">Statistika</span>
+            <span className="text-xs text-fuchsia-500">So‘nggi donorlar, zaxira, va boshqalar</span>
+          </div>
+          <div className="flex flex-col items-center rounded-xl bg-white/90 p-4 shadow border border-fuchsia-100">
+            <PieChart className="w-7 h-7 mb-1" />
+            <span className="font-semibold">Tahlil</span>
+            <span className="text-xs text-fuchsia-500">Qon turlari va ehtiyojlar</span>
+          </div>
+          <div className="flex flex-col items-center rounded-xl bg-white/90 p-4 shadow border border-fuchsia-100">
+            <Map className="w-7 h-7 mb-1" />
+            <span className="font-semibold">Manzillar</span>
+            <span className="text-xs text-fuchsia-500">Donor punktlari va filiallar</span>
+          </div>
+          <div className="flex flex-col items-center rounded-xl bg-white/90 p-4 shadow border border-fuchsia-100">
+            <Bell className="w-7 h-7 mb-1" />
+            <span className="font-semibold">Bildirishnomalar</span>
+            <span className="text-xs text-fuchsia-500">Yangi so‘rov va xabarlar</span>
+          </div>
         </div>
       </section>
 

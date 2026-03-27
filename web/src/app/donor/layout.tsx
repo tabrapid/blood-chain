@@ -29,28 +29,19 @@ export default async function DonorLayout({
           <div className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Donor Menyu</div>
           <SidebarNav
             items={[
-              { href: "/donor", label: "Dashboard" },
-              { href: "/donor/health", label: "Salomatlik" },
-              { href: "/donor/booking", label: "Booking" },
-              { href: "/donor/map", label: "Xarita" },
-              { href: "/donor/rewards", label: "Bonus & Gamification" },
-              { href: "/donor/profile", label: "Profil" },
+              { href: "/donor", label: "Dashboard", icon: "home" },
+              { href: "/donor/health", label: "Salomatlik", icon: "health" },
+              { href: "/donor/booking", label: "Booking", icon: "award" },
+              { href: "/donor/map", label: "Xarita", icon: "map" },
+              { href: "/donor/rewards", label: "Bonuslar", icon: "rewards" },
+              { href: "/donor/profile", label: "Qon analizi", icon: "profile" },
+              { href: "/donor/settings", label: "Sozlamalar", icon: "settings" },
+              { href: "/login", label: "Chiqish", icon: "logout" },
             ]}
           />
         </aside>
         <section className="space-y-4">
-          {/* Qon donatsiyasi haqida qisqacha matn */}
-          <div className="rounded-xl bg-blue-50/80 p-4 mb-2 shadow text-blue-900 backdrop-blur-md">
-            <h2 className="font-bold text-lg mb-1">Qon donatsiyasi haqida</h2>
-            <p>
-              Qon donatsiyasi — bu hayotni saqlab qolish va sog‘liqni tiklash uchun muhim jarayon. Har bir donor o‘z donatsiyasi bilan bir nechta inson hayotini saqlab qolishi mumkin.
-            </p>
-            <ul className="mt-2 list-disc list-inside text-blue-800 text-sm">
-              <li>1 dona qon (450 ml) — 3 ta bemorga yordam beradi.</li>
-              <li>Qon komponentlari: eritrotsit, plazma, trombotsit.</li>
-              <li>Donor bo‘lish — jamiyatga foyda va sog‘liq uchun ham foydali.</li>
-            </ul>
-          </div>
+          {/* ...existing code... */}
           {children}
         </section>
       </main>

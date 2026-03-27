@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { BarChart2, PieChart as LucidePieChart, Users, Award, LineChart as LucideLineChart, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 type InventoryRow = {
@@ -81,11 +82,11 @@ export default function CenterAnalyticsPage() {
 
   return (
     <div className="space-y-4">
-      <h1>Analytics & AI</h1>
+      <h1 className="flex items-center gap-2 text-xl font-bold mb-2"><BarChart2 className="w-6 h-6" /> Analytics & AI</h1>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="app-card">
-          <h3>Qon guruhi bo'yicha zaxira</h3>
+          <h3 className="flex items-center gap-2"><BarChart2 className="w-5 h-5" /> Qon guruhi bo'yicha zaxira</h3>
           <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={200}>
               <BarChart data={barData}>
@@ -100,7 +101,7 @@ export default function CenterAnalyticsPage() {
         </div>
 
         <div className="app-card">
-          <h3>Komponent bo'yicha taqsimot</h3>
+          <h3 className="flex items-center gap-2"><LucidePieChart className="w-5 h-5" /> Komponent bo'yicha taqsimot</h3>
           <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={200}>
               <PieChart>
@@ -117,21 +118,23 @@ export default function CenterAnalyticsPage() {
       </div>
 
       <div className="app-card">
-        <h3>AI Insights</h3>
+        <h3 className="flex items-center gap-2"><Sparkles className="w-5 h-5 text-fuchsia-700" /> AI Insights</h3>
         <div className="mt-3 space-y-2">
           {aiInsights.map((insight, i) => (
-            <div key={i} className="rounded-lg bg-zinc-50 p-3 text-sm dark:bg-zinc-800 dark:text-zinc-200">{insight}</div>
+            <div key={i} className="flex items-center gap-2 rounded-lg bg-zinc-50 p-3 text-sm dark:bg-zinc-800 dark:text-zinc-200">
+              <Sparkles className="w-4 h-4 text-fuchsia-500" /> {insight}
+            </div>
           ))}
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="app-card">
-          <h3>Donor leaderboard</h3>
+          <h3 className="flex items-center gap-2"><Users className="w-5 h-5" /> Donor leaderboard</h3>
           <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
             {leaderboard.slice(0, 10).map((donor, i) => (
-              <div key={donor.id} className="flex justify-between rounded-lg bg-zinc-50 p-2 text-sm dark:bg-zinc-800">
-                <span>{i + 1}. {donor.first_name} {donor.last_name}</span>
+              <div key={donor.id} className="flex justify-between items-center rounded-lg bg-zinc-50 p-2 text-sm dark:bg-zinc-800">
+                <span className="flex items-center gap-1"><Award className="w-4 h-4 text-amber-500" /> {i + 1}. {donor.first_name} {donor.last_name}</span>
                 <span>{donor.total_donated_liters}L · {donor.points}pts</span>
               </div>
             ))}
@@ -139,7 +142,7 @@ export default function CenterAnalyticsPage() {
         </div>
 
         <div className="app-card">
-          <h3>Trend analysis</h3>
+          <h3 className="flex items-center gap-2"><LucideLineChart className="w-5 h-5" /> Trend analysis</h3>
           <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={200}>
               <LineChart data={barData}>

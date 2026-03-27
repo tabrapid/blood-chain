@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AlertTriangle, Clock } from "lucide-react";
 import { toast } from "sonner";
 
-type InventoryRow = {
-  id: string;
-  blood_group: string;
-  rh: string | null;
-  component: string;
-  quantity: number;
-  expiry_date: string | null;
-};
 
 export default function CenterExpiryPage() {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
@@ -57,12 +50,12 @@ export default function CenterExpiryPage() {
 
   return (
     <div className="space-y-4">
-      <h1>Expiry Monitoring</h1>
+      <h1 className="flex items-center gap-2 text-xl font-bold mb-2"><Clock className="w-6 h-6" /> Expiry Monitoring</h1>
       <div className="app-card">
-        <h3>Yaroqlilik nazorati</h3>
+        <h3 className="flex items-center gap-2"><AlertTriangle className="w-5 h-5 text-yellow-500" /> Yaroqlilik nazorati</h3>
         <div className="mt-3 space-y-3 text-sm">
           <div className="rounded-lg bg-[#FFF9C4] p-3 dark:bg-yellow-950/30 dark:text-yellow-100">
-            <div className="font-semibold">48 soat qolganlar (warning): {expiring48h.length} ta</div>
+            <div className="flex items-center gap-2 font-semibold"><AlertTriangle className="w-4 h-4 text-yellow-500" /> 48 soat qolganlar (warning): {expiring48h.length} ta</div>
             <div className="mt-2 space-y-1">
               {expiring48h.slice(0, 5).map((item) => (
                 <div key={item.id}>{item.blood_group}{item.rh} · {item.component} · {item.quantity} birlik</div>
@@ -70,13 +63,11 @@ export default function CenterExpiryPage() {
             </div>
           </div>
           <div className="rounded-lg bg-[#FFCDD2] p-3 dark:bg-red-950/30 dark:text-red-100">
-            <div className="rounded-lg bg-[#FFCDD2] p-3 dark:bg-red-950/30 dark:text-red-100">
-              <div className="font-semibold">24 soat qolganlar (critical): {expiring24h.length} ta</div>
-              <div className="mt-2 space-y-1">
-                {expiring24h.slice(0, 5).map((item) => (
-                  <div key={item.id}>{item.blood_group}{item.rh} · {item.component} · {item.quantity} birlik</div>
-                ))}
-              </div>
+            <div className="flex items-center gap-2 font-semibold"><AlertTriangle className="w-4 h-4 text-red-500" /> 24 soat qolganlar (critical): {expiring24h.length} ta</div>
+            <div className="mt-2 space-y-1">
+              {expiring24h.slice(0, 5).map((item) => (
+                <div key={item.id}>{item.blood_group}{item.rh} · {item.component} · {item.quantity} birlik</div>
+              ))}
             </div>
           </div>
           {expired.length > 0 && (
